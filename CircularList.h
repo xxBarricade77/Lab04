@@ -60,7 +60,7 @@ DoubleNode<T>* CircularList<T>::find(int index)
    //complete the distance calculations below
    //loc_pos is the index that loc currently points to
    //index is the requested index
- 
+	
    if (index >= loc_pos)
    {
 	dist_next= index - loc_pos;
@@ -69,8 +69,9 @@ DoubleNode<T>* CircularList<T>::find(int index)
    }
    else
    {
-       dis_prev = loc_pos - index;                             //distance without the bridge (prev refs, negative)
-		dis_next = sz-loc+index;											//distance using the bridge (next refs, positive)
+	
+	dist_prev = index - loc_pos;                             //distance without the bridge (prev refs, negative)
+	dist_next = sze-loc_pos + index;											//distance using the bridge (next refs, positive)
    }
 
    //DO THIS which distance is smaller?
@@ -78,11 +79,11 @@ DoubleNode<T>* CircularList<T>::find(int index)
    //set min_dist to the smaller value, keeping the sign
 	if(abs(dist_next)>abs(dist_prev))
 	{
-		min_dist = dis_prev;
+		min_dist = dist_prev;
 	}
 	else 
 	{
-		min_dist = dis_next;
+		min_dist = dist_next;
 	}
 
 
@@ -145,26 +146,32 @@ void CircularList<T>::remove(int index)
    //DO THIS
    //remember to move loc and loc_pos to the location of the removal
    //remember to delete the node after it has been removed from the list
+   DoubleNode<T>* curr = find(index);
+   
    if (index >= 1 && index <= sze) 
    {
-	DoubleNode<T>* curr = find(index);
+	
       if (sze == 1) //special case
       {
-		curr = curr->setPrev(NULL);
-		curr = currr->setNext(NULL);
-		loc_pos=0;
-		delete curr;
+		loc_pos = index;
+		
+		curr->setPrev(NULL);
+		curr->setNext(NULL);
+		loc_pos = 0;
+		
       }
       else
       {
          //use local variables
-		list_Prev = curr->getPrev();
-		list_Next = curr->getNext(); 
-		list_Next = setPrev(curr->getPrev());
-		list_Prev = setNext(curr->getNext());
-			
+		loc = curr;
+		loc_pos = index;
+		DoubleNode<T>*list_prev = curr->getPrev();
+		DoubleNode<T>*list_next = curr->getNext();
+		list_next->setPrev(list_prev);	
+		list_prev->setNext(list_next);		
       }
-      sze--;
+		
+	  sze--;
    } 
 }
 
