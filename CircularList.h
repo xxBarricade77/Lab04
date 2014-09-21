@@ -64,20 +64,20 @@ DoubleNode<T>* CircularList<T>::find(int index)
    if (index >= loc_pos)
    {
 	dist_next= index - loc_pos;
-	dist_prev =	loc_pos - index;						//distance without the bridge (next refs, positive)
+	dist_prev =	index - (sze + loc_pos); 						//distance without the bridge (next refs, positive)
 													//distance using the bridge (prev refs, negative)
    }
    else
    {
 	
 	dist_prev = index - loc_pos;                             //distance without the bridge (prev refs, negative)
-	dist_next = sze-loc_pos + index;											//distance using the bridge (next refs, positive)
+	dist_next = sze-(loc_pos + index);											//distance using the bridge (next refs, positive)
    }
 
    //DO THIS which distance is smaller?
    //find the minimum distance using absolute value
    //set min_dist to the smaller value, keeping the sign
-	if(abs(dist_next)>abs(dist_prev))
+	if(abs(dist_next) > abs(dist_prev))
 	{
 		min_dist = dist_prev;
 	}
@@ -147,32 +147,31 @@ void CircularList<T>::remove(int index)
    //remember to move loc and loc_pos to the location of the removal
    //remember to delete the node after it has been removed from the list
    DoubleNode<T>* curr = find(index);
-   
+	loc = curr;
+	loc_pos = index;
    if (index >= 1 && index <= sze) 
    {
 	
       if (sze == 1) //special case
       {
-		loc_pos = index;
 		
-		curr->setPrev(NULL);
-		curr->setNext(NULL);
+		loc->setPrev(NULL);
+		loc->setNext(NULL);
 		loc_pos = 0;
-		
+		loc = NULL;
       }
       else
       {
          //use local variables
-		loc = curr;
-		loc_pos = index;
-		DoubleNode<T>*list_prev = curr->getPrev();
-		DoubleNode<T>*list_next = curr->getNext();
+		DoubleNode<T>*list_prev = loc->getPrev();
+		DoubleNode<T>*list_next = loc->getNext();
 		list_next->setPrev(list_prev);	
-		list_prev->setNext(list_next);		
+		list_prev->setNext(list_next); 
+		loc = loc->getNext();
       }
-		
 	  sze--;
    } 
+   
 }
 
 template < class T >
